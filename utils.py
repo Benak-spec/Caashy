@@ -12,5 +12,3 @@ def get_inflation(country="India"):
 
 def get_spending_tip():
     print("\n💡 Tip: Review subscriptions monthly to avoid unused charges.")
-
-#ocmment
