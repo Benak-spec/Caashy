@@ -19,8 +19,6 @@ while True:
     elif choice == "4":
         fetch_exchange_rates()
     elif choice == "5":
-        get_inflation()
-    elif choice == "6":
         get_spending_tip()
     elif choice == "0":
         break
