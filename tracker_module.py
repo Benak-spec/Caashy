@@ -42,4 +42,14 @@ def view_expenses():
     else:
         print("No expenses logged yet.")
 
+from tracker_module import log_expense
+
+@app.route('/add', methods=['POST'])
+def add():
+    amount = float(request.form['amount'])
+    category = request.form['category']
+    note = request.form.get('note', '')
+    log_expense(amount, category, note)
+    return redirect('/')
+
 
