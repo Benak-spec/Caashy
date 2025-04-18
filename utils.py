@@ -1,7 +1,7 @@
 import requests
 
 def get_inflation(country="India"):
-    headers = {'X-Api-Key': 'YOUR_API_KEY'}  # Replace with your API key
+    headers = {'X-Api-Key': 'YOUR_API_KEY'} 
     url = f'https://api.api-ninjas.com/v1/inflation?country={country}'
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
