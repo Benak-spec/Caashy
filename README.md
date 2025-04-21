@@ -79,19 +79,25 @@ Open your browser and navigate to `http://localhost:5000`
 ## File Structure
 ```
 Caashy/
-├── app.py
-├── tracker_module.py
-├── api_helpers.py
-├── models.py
+├── app.py                 # Flask application entry point
+├── tracker_module.py      # Handles expense logging and dual saving (DB + CSV)
+├── api_helpers.py         # External API calls for exchange rate, crypto price, and quote
+├── models.py              # SQLAlchemy models including Transaction class
+├── create_db.py           # Script to initialize SQLite database
 ├── templates/
-│   └── index.html
+│   └── index.html         # Main HTML layout using Bootstrap and Jinja2
 ├── static/
-│   └── style.css
+│   └── style.css          # Custom CSS styling for UI
 ├── data/
-│   ├── expenses.csv
-│   └── expenses.db
+│   ├── expenses.csv       # CSV file storing logged expenses
+│   └── expenses.db        # SQLite database for persistent transactions
 ├── tests/
-│   └── test_expense.py
+│   ├── test_expense.py    # Unit test for expense logging
+│   ├── test_budget.py     # Unit test for budget logic (if implemented)
+│   └── test_api.py        # Unit test for API integration endpoints
+├── requirements.txt       # List of Python dependencies
+├── README.md              # Project documentation
+└── .gitignore             # Git ignored files (e.g., virtual environment, db)
 ```
 
 ## Configuration
