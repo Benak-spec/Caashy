@@ -6,7 +6,6 @@ from flask import Flask
 
 EXPENSE_FILE = 'data/expenses.csv'
 
-# Needed to allow db access from script
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 data_folder = os.path.join(basedir, 'data')
