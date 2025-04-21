@@ -1,87 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Budget Tracker System</title>
-
-    <!-- External CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Optional: custom favicon -->
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3469/3469734.png">
+  <meta charset="UTF-8">
+  <title>Caashy - Personal Finance Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f7f8fa 0%, #ffffff 100%);
+      margin: 0;
+    }
+    .hero {
+      background: #f8f9fb;
+      padding: 60px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .hero-text {
+      max-width: 50%;
+    }
+    .hero-text h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .hero-text p {
+      font-size: 1.1rem;
+      color: #555;
+    }
+    .hero-image {
+      max-width: 45%;
+      min-width: 280px;
+    }
+    .hero-image img {
+      width: 100%;
+      border-radius: 12px;
+    }
+    .navbar {
+      background-color: #fff;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid #e0e0e0;
+      justify-content: center !important;
+    }
+    .navbar-brand {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #198754;
+    }
+    .btn-logout {
+      border: 1px solid #198754;
+      color: #198754;
+      background: transparent;
+      position: absolute;
+      right: 2rem;
+      top: 1rem;
+    }
+    .btn-logout:hover {
+      background-color: #198754;
+      color: white;
+    }
+    .section-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    .card {
+      background-color: white;
+      border: 1px solid #eaeaea;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      padding: 1.5rem;
+    }
+    .form-control, select {
+      border-radius: 8px;
+    }
+    .btn-primary {
+      background-color: #198754;
+      border: none;
+      font-weight: 500;
+    }
+    .btn-outline-secondary {
+      border: 1px solid #198754;
+      color: #198754;
+    }
+    .btn-outline-secondary:hover {
+      background-color: #198754;
+      color: #fff;
+    }
+    .container {
+      max-width: 1080px;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+      background-color: #f6f8fc;
+    }
+  </style>
 </head>
 <body>
-    <div class="container py-5">
-        <h2 class="text-center mb-4">💰 Budget Tracker System</h2>
+<nav class="navbar d-flex position-relative">
+  <a class="navbar-brand mx-auto" href="#">Caashy</a>
+  <a href="/logout" class="btn btn-logout">Logout</a>
+</nav>
 
-        <div class="row g-4">
-            <!-- Left: Add Expense Form -->
-            <div class="col-md-4">
-                <div class="card p-4">
-                    <h5 class="section-title mb-3">➕ Add New Expense</h5>
-                    <form action="/add" method="post">
-                        <input class="form-control mb-2" name="category" placeholder="Expense Title" required>
-                        <input class="form-control mb-2" name="amount" type="number" step="0.01" placeholder="Amount" required>
-                        <input class="form-control mb-3" name="note" placeholder="Note (optional)">
-                        <button type="submit" class="btn btn-primary w-100">Add Expense</button>
-                    </form>
-                    <a href="/reset" class="btn btn-danger w-100 mt-3">Reset All</a>
-                </div>
-            </div>
+<section class="hero">
+  <div class="hero-text">
+    <h1>Track your expenses. Grow your savings.</h1>
+    <p>Caashy helps you stay in control of your money. Add expenses, monitor your budget, and gain financial insights—all in one place.</p>
+  </div>
+  <div class="hero-image">
+    <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Person with phone">
+  </div>
+</section>
 
-            <!-- Right: Summary + History + API Info -->
-            <div class="col-md-8">
-                <!-- Summary Card -->
-                <div class="card p-4 mb-3">
-                    <h5 class="section-title mb-3">📊 Summary</h5>
-                    <div class="row text-center">
-                        <div class="col"><strong>Total Budget:</strong><br> ₹{{ budget }}</div>
-                        <div class="col"><strong>Total Expenses:</strong><br> ₹{{ total_expenses }}</div>
-                        <div class="col"><strong>Balance:</strong><br> ₹{{ budget - total_expenses }}</div>
-                    </div>
-                </div>
-
-                <!-- Expense History Table -->
-                <div class="card p-4 mb-3">
-                    <h5 class="section-title mb-3">📋 Expense History</h5>
-                    <table class="table table-bordered table-hover table-sm">
-                        <thead class="table-light text-center">
-                            <tr>
-                                <th>Date</th>
-                                <th>Category</th>
-                                <th>Amount</th>
-                                <th>Note</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for t in transactions %}
-                            <tr>
-                                <td>{{ t.date }}</td>
-                                <td>{{ t.category }}</td>
-                                <td>₹{{ t.amount }}</td>
-                                <td>{{ t.note or "-" }}</td>
-                            </tr>
-                        {% else %}
-                            <tr>
-                                <td colspan="4" class="text-center text-muted">No expenses logged yet.</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- API Data Card -->
-                <div class="card p-4">
-                    <h5 class="section-title mb-3">🔍 Insights & Tips</h5>
-                    <ul class="list-unstyled mb-0">
-                        <li><strong>💱 Exchange Rate USD → INR:</strong> ₹{{ fx }}</li>
-                        <li><strong>📈 Inflation Rate:</strong> {{ inflation }}%</li>
-                        <li><strong>💡 Tip:</strong> {{ tip }}</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+<div class="container py-5">
+  <div class="row g-4">
+    <!-- Add Expense -->
+    <div class="col-md-4">
+      <div class="card">
+        <h5 class="section-title"><i class="bi bi-plus-circle"></i> Add New Expense</h5>
+        <form action="/add" method="post">
+          <select class="form-control mb-3" name="category" required>
+            <option value="" disabled selected>Select Expense Category</option>
+            <option value="Car Rent">Car Rent</option>
+            <option value="Car EMI">Car EMI</option>
+            <option value="House Loan">House Loan</option>
+            <option value="Food">Food</option>
+            <option value="Utilities">Utilities</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Other">Other</option>
+          </select>
+          <input class="form-control mb-3" name="amount" type="number" step="0.01" placeholder="Amount" required>
+          <input class="form-control mb-3" name="note" placeholder="Note (optional)">
+          <button type="submit" class="btn btn-primary w-100">Add Expense</button>
+        </form>
+        <a href="/reset" class="btn btn-outline-secondary w-100 mt-2">Reset All</a>
+      </div>
     </div>
+
+    <!-- Right Column -->
+    <div class="col-md-8">
+      <!-- Summary -->
+      <div class="card mb-4">
+        <h5 class="section-title"><i class="bi bi-wallet2"></i> Summary</h5>
+        <div class="row text-center">
+          <div class="col"><strong>Total Budget</strong><br>₹{{ budget }}</div>
+          <div class="col"><strong>Total Expenses</strong><br>₹{{ total_expenses }}</div>
+          <div class="col"><strong>Balance</strong><br><span class="{% if budget - total_expenses < 0 %}text-danger{% else %}text-success{% endif %}">₹{{ budget - total_expenses }}</span></div>
+        </div>
+      </div>
+
+      <!-- Expense History -->
+      <div class="card mb-4">
+        <h5 class="section-title"><i class="bi bi-list-ul"></i> Expense History</h5>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for t in transactions %}
+              <tr>
+                <td>{{ t.date }}</td>
+                <td>{{ t.category }}</td>
+                <td>₹{{ t.amount }}</td>
+                <td>{{ t.note or "-" }}</td>
+              </tr>
+              {% else %}
+              <tr><td colspan="4" class="text-center text-muted">No expenses logged yet.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Insights -->
+      <div class="card">
+        <h5 class="section-title"><i class="bi bi-lightbulb"></i> Insights & Tips</h5>
+        <ul class="list-unstyled">
+          <li><i class="bi bi-currency-exchange"></i> <strong>Exchange Rate USD → INR:</strong> ₹{{ fx }}</li>
+          <li><i class="bi bi-bar-chart"></i> <strong>Inflation Rate:</strong> {{ inflation }}%</li>
+          <li><i class="bi bi-lightbulb"></i> <strong>Tip:</strong> {{ tip }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
